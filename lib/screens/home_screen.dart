@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_app/pages/chat_page.dart';
 import 'package:twitter_app/pages/notification_page.dart';
+import 'package:twitter_app/pages/profile_page.dart';
 import 'package:twitter_app/pages/seacrh_page.dart';
 import 'package:twitter_app/widgets/post_widget.dart';
-import 'package:twitter_app/models/twitter_post.dart';
+import 'package:twitter_app/utils/models/post_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:twitter_app/utils/theme/theme_provider.dart';
 
-final twitterPostsProvider = Provider<List<TwitterPost>>((ref) => twitterPosts);
+final usersProvider = Provider<List<UserModel>>((ref) => users);
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -70,7 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
 class HomeTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final posts = ref.watch(twitterPostsProvider);
+    final users = ref.watch(usersProvider);
+    // Collect all posts from all users
+    final posts = users.expand((u) => u.posts).toList();
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -92,7 +96,9 @@ class HomeTab extends ConsumerWidget {
               ListTile(
                 leading: Icon(Icons.person),
                 title: Text('Profile'),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage(username: '@hanson',),),);
+                },
               ),
               ListTile(
                 leading: Icon(Icons.list),
@@ -110,10 +116,24 @@ class HomeTab extends ConsumerWidget {
                 onTap: () {},
               ),
               Spacer(),
-              ListTile(
-                leading: Icon(Icons.logout),
-                title: Text('Logout'),
-                onTap: () {},
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      leading: Icon(Icons.logout),
+                      title: Text('Logout'),
+                      onTap: () {},
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.brightness_6),
+                    tooltip: 'Toggle Theme',
+                    onPressed: () {
+                      final container = ProviderScope.containerOf(context, listen: false);
+                      container.read(themeProvider.notifier).toggleTheme();
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -181,12 +201,14 @@ class HomeTab extends ConsumerWidget {
                     itemCount: posts.length,
                     itemBuilder: (context, index) {
                       final post = posts[index];
+                      // Find user for this post
+                      final user = users.firstWhere((u) => u.posts.contains(post));
                       return TwitterPostWidget(
-                        profileImageUrl: post.profileImageUrl,
-                        username: post.username,
-                        handle: post.handle,
+                        profileImageUrl: user.profileImageUrl,
+                        username: user.username,
+                        handle: user.handle,
                         time: post.time,
-                        tweetText: post.tweetText,
+                        tweetText: post.content,
                         isVerified: post.isVerified,
                       );
                     },
@@ -199,12 +221,14 @@ class HomeTab extends ConsumerWidget {
                     itemCount: posts.length,
                     itemBuilder: (context, index) {
                       final post = posts[index];
+                      // Find user for this post
+                      final user = users.firstWhere((u) => u.posts.contains(post));
                       return TwitterPostWidget(
-                        profileImageUrl: post.profileImageUrl,
-                        username: post.username,
-                        handle: post.handle,
+                        profileImageUrl: user.profileImageUrl,
+                        username: user.username,
+                        handle: user.handle,
                         time: post.time,
-                        tweetText: post.tweetText,
+                        tweetText: post.content,
                         isVerified: post.isVerified,
                       );
                     },

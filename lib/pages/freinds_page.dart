@@ -13,7 +13,10 @@ class _FreindsPageState extends State<FreindsPage> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Text('Freinds Page'),
+          child: Text(
+            'Freinds Page',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ),
       ),
     );

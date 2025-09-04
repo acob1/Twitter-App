@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:twitter_app/pages/profile_page.dart';
 
-class TwitterPostWidget extends StatefulWidget {
+class TwitterPostWidget extends StatelessWidget {
   final String profileImageUrl;
   final String username;
   final String handle;
@@ -19,11 +20,6 @@ class TwitterPostWidget extends StatefulWidget {
   });
 
   @override
-  State<TwitterPostWidget> createState() => _TwitterPostWidgetState();
-}
-
-class _TwitterPostWidgetState extends State<TwitterPostWidget> {
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -39,9 +35,19 @@ class _TwitterPostWidgetState extends State<TwitterPostWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Profile picture
-              CircleAvatar(
-                radius: 22,
-                backgroundImage: NetworkImage(widget.profileImageUrl),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage(username: username),
+                    ),
+                  );
+                },
+                child: CircleAvatar(
+                  radius: 22,
+                  backgroundImage: NetworkImage(profileImageUrl),
+                ),
               ),
               const SizedBox(width: 12),
               // Main content: header, tweet, engagement
@@ -53,14 +59,14 @@ class _TwitterPostWidgetState extends State<TwitterPostWidget> {
                     Row(
                       children: [
                         Text(
-                          widget.username,
+                          username,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                             color: Colors.black,
                           ),
                         ),
-                        if (widget.isVerified) ...[
+                        if (isVerified) ...[
                           const SizedBox(width: 4),
                           Container(
                             width: 16,
@@ -78,7 +84,7 @@ class _TwitterPostWidgetState extends State<TwitterPostWidget> {
                         ],
                         const SizedBox(width: 6),
                         Text(
-                          '@${widget.handle}',
+                          '@$handle',
                           style: const TextStyle(
                             color: Color(0xFF536471),
                             fontSize: 15,
@@ -86,7 +92,7 @@ class _TwitterPostWidgetState extends State<TwitterPostWidget> {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          '· ${widget.time}',
+                          '· $time',
                           style: const TextStyle(
                             color: Color(0xFF536471),
                             fontSize: 15,
@@ -103,7 +109,7 @@ class _TwitterPostWidgetState extends State<TwitterPostWidget> {
                     const SizedBox(height: 4),
                     // Tweet text
                     Text(
-                      widget.tweetText,
+                      tweetText,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black,
@@ -178,28 +184,3 @@ class _TwitterPostWidgetState extends State<TwitterPostWidget> {
   }
 }
 
-// Example usage in main.dart
-// void main() {
-//   runApp(const MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Twitter Post Demo',
-//       theme: ThemeData(primarySwatch: Colors.blue),
-//       home: TwitterPostWidget(
-//         profileImageUrl: 'https://your-image-url',
-//         username: 'Your Name',
-//         handle: 'yourhandle',
-//         time: '1h',
-//         tweetText: 'This is a dynamic tweet!',
-//         isVerified: true,
-//       ),
-//       debugShowCheckedModeBanner: false,
-//     );
-//   }
-// }

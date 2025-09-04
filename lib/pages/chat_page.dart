@@ -14,28 +14,28 @@ class ChatPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         title: Container(
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.grey[200],
+            color: Theme.of(context).colorScheme.surfaceVariant,
             borderRadius: BorderRadius.circular(30),
           ),
           child: TextField(
             decoration: InputDecoration(
               hintText: 'Search Twitter',
-              hintStyle: TextStyle(color: Colors.grey[600]),
+              hintStyle: TextStyle(color: Theme.of(context).hintColor),
               border: InputBorder.none,
-              prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+              prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
               contentPadding: EdgeInsets.symmetric(vertical: 10),
             ),
-            style: TextStyle(fontSize: 16),
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.settings_outlined, color: Colors.black),
+            icon: Icon(Icons.settings_outlined, color: Theme.of(context).iconTheme.color),
             onPressed: () {},
           ),
         ],
@@ -51,19 +51,14 @@ class ChatPage extends ConsumerWidget {
             ),
             title: Row(
               children: [
-                Text(chat.username, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(chat.username, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)),
                 const Spacer(),
-                Text(chat.time, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                Text(chat.time, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
             subtitle: Text(
               chat.lastMessage,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontWeight: chat.isRead ? FontWeight.normal : FontWeight.bold,
-                color: chat.isRead ? Colors.grey[700] : Colors.black,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             onTap: () {
               Navigator.push(
@@ -73,7 +68,6 @@ class ChatPage extends ConsumerWidget {
                 ),
               );
             },
-            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           );
         },
       ),

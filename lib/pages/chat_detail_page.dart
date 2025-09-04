@@ -23,15 +23,15 @@ class ChatDetailPage extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(chat.username, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(chat.username, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, fontSize: 16)),
                 // You can add handle here if you add it to the model
               ],
             ),
           ],
         ),
         elevation: 0.5,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
       ),
       body: Column(
         children: [
@@ -48,7 +48,7 @@ class ChatDetailPage extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(vertical: 4),
                     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                     decoration: BoxDecoration(
-                      color: isMe ? Colors.blue[50] : Colors.grey[200],
+                      color: isMe ? Theme.of(context).colorScheme.primary.withOpacity(0.1) : Theme.of(context).colorScheme.surfaceVariant,
                       borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(18),
                         topRight: const Radius.circular(18),
@@ -58,10 +58,7 @@ class ChatDetailPage extends StatelessWidget {
                     ),
                     child: Text(
                       msg.text,
-                      style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 15,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
                 );

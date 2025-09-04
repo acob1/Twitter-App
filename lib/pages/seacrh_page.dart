@@ -19,12 +19,12 @@ class _SeacrhPageState extends State<SeacrhPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               UserAccountsDrawerHeader(
-                accountName: Text('Danso jacob'),
-                accountEmail: Text('@Jlem07'),
+                accountName: Text('Danso jacob', style: Theme.of(context).textTheme.bodyLarge),
+                accountEmail: Text('@Jlem07', style: Theme.of(context).textTheme.bodyMedium),
                 currentAccountPicture: CircleAvatar(
                   backgroundImage: NetworkImage('https://randomuser.me/api/portraits/men/32.jpg'),
                 ),
-                decoration: BoxDecoration(color: Colors.blue[700]),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
               ),
               ListTile(
                 leading: Icon(Icons.person),
