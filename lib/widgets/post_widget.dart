@@ -40,7 +40,7 @@ class TwitterPostWidget extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProfilePage(username: username),
+                      builder: (context) => TwitterProfileUI(username: username,),
                     ),
                   );
                 },

@@ -97,13 +97,25 @@ class HomeTab extends ConsumerWidget {
                 leading: Icon(Icons.person),
                 title: Text('Profile'),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage(username: '@hanson',),),);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TwitterProfileUI(username: 'Danso jacob',), 
+                    ),
+                  );
                 },
               ),
               ListTile(
                 leading: Icon(Icons.list),
-                title: Text('Lists'),
-                onTap: () {},
+                title: Text('Chat'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ChatPage(),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 leading: Icon(Icons.bookmark_border),
@@ -242,3 +254,6 @@ class HomeTab extends ConsumerWidget {
     );
   }
 }
+
+
+

@@ -57,7 +57,7 @@ final List<ChatModel> chats = [
     username: 'Benji Quan',
     lastMessage: 'a hear you no dey accra again',
     time: '10m',
-    isRead: false,
+    isRead: true,
     messages: [
       Message(text: 'Heya wosop man?', time: '11m', isMe: false),
       Message(text: 'a hear you no dey accra again', time: '11m', isMe: false),
