@@ -250,7 +250,7 @@ class TwitterProfileUI extends ConsumerWidget {
                   const Text("Following", style: TextStyle(color: Colors.grey)),
                   const SizedBox(width: 16),
                   Text(
-                    "${user.followers}",
+                    _formatFollowers(user.followers),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -312,5 +312,20 @@ class TwitterProfileUI extends ConsumerWidget {
         ),
       ),
     );
+    
+  }
+  // Helper to format followers like "278K"
+  static String _formatFollowers(int value) {
+    if (value >= 1000000) {
+      return "${(value / 1000000).toStringAsFixed(1)}M";
+    } else if (value >= 1000) {
+      return "${(value / 1000).toStringAsFixed(value >= 10000 ? 0 : 1)}K";
+    } else {
+      return value.toString();
+    }
   }
 }
+  
+
+
+
