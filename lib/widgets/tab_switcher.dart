@@ -116,7 +116,7 @@ class ForYouTab extends StatelessWidget {
           handle: user.handle,
           time: post.time,
           tweetText: post.content,
-          isVerified: post.isVerified,
+          isVerified: post.isVerified, tweetId: 'sdsd',
         );
       }).toList(),
     );
@@ -134,7 +134,7 @@ class FollowingTab extends StatelessWidget {
           handle: 'weeee',
           time: '2m',
           tweetText: 'Dogecoin to the moon! 🚀',
-          isVerified: true,
+          isVerified: true, tweetId: 'fff',
         ),
         TwitterPostWidget(
           profileImageUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
@@ -142,7 +142,7 @@ class FollowingTab extends StatelessWidget {
           handle: 'jane_doe',
           time: '10m',
           tweetText: 'Just finished a 5k run and feeling great! #fitness',
-          isVerified: false,
+          isVerified: false, tweetId: 'rrtt',
         ),
         TwitterPostWidget(
           profileImageUrl: 'https://randomuser.me/api/portraits/men/85.jpg',
@@ -150,7 +150,7 @@ class FollowingTab extends StatelessWidget {
           handle: 'johnapple',
           time: '30m',
           tweetText: 'Excited to announce my new project launching next week!',
-          isVerified: true,
+          isVerified: true, tweetId: 'jvnoin',
         ),
         TwitterPostWidget(
           profileImageUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
@@ -158,16 +158,16 @@ class FollowingTab extends StatelessWidget {
           handle: 'samanthalee',
           time: '1h',
           tweetText: 'Coffee and code. That’s my kind of morning ☕💻',
-          isVerified: false,
+          isVerified: false, tweetId: 'nbln;',
         ),
         TwitterPostWidget(
           profileImageUrl: 'https://randomuser.me/api/portraits/men/41.jpg',
           username: 'Michael Chen',
-          handle: 'michaelchen',
+          handle: 'michael',
           time: '2h',
           tweetText:
               'Just landed in Tokyo! Can’t wait to explore the city. 🇯🇵',
-          isVerified: false,
+          isVerified: false, tweetId: '',
         ),
         TwitterPostWidget(
           profileImageUrl: 'https://randomuser.me/api/portraits/women/12.jpg',
@@ -176,7 +176,7 @@ class FollowingTab extends StatelessWidget {
           time: '3h',
           tweetText:
               'Reading a new book on Flutter development. Highly recommend it!',
-          isVerified: true,
+          isVerified: true, tweetId: 'dffff',
         ),
         TwitterPostWidget(
           profileImageUrl: 'https://randomuser.me/api/portraits/men/77.jpg',
@@ -184,7 +184,7 @@ class FollowingTab extends StatelessWidget {
           handle: 'carlosr',
           time: '4h',
           tweetText: 'Had the best tacos ever in Mexico City today! 🌮',
-          isVerified: false,
+          isVerified: false, tweetId: 'bjmpbj',
         ),
         TwitterPostWidget(
           profileImageUrl: 'https://randomuser.me/api/portraits/women/23.jpg',
@@ -192,7 +192,7 @@ class FollowingTab extends StatelessWidget {
           handle: 'emilyclark',
           time: '5h',
           tweetText: 'Working on a new art project. Stay tuned for updates!',
-          isVerified: false,
+          isVerified: false, tweetId: ';ovjvf',
         ),
       ],
     );

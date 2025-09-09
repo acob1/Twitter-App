@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_app/pages/chat_page.dart';
+import 'package:twitter_app/pages/freinds_page.dart';
 import 'package:twitter_app/pages/notification_page.dart';
 import 'package:twitter_app/pages/profile_page.dart';
 import 'package:twitter_app/pages/seacrh_page.dart';
@@ -34,7 +35,14 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(child: _pages[_navIndex]),
       floatingActionButton: _navIndex == 0
           ? FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreatePostPage(),
+                  ),
+                );
+              },
               backgroundColor: Colors.blue,
               shape: const CircleBorder(),
               child: const Icon(Icons.add, color: Colors.white),
@@ -221,7 +229,7 @@ class HomeTab extends ConsumerWidget {
                         handle: user.handle,
                         time: post.time,
                         tweetText: post.content,
-                        isVerified: post.isVerified,
+                        isVerified: post.isVerified, tweetId: 'ffgg',
                       );
                     },
                   ),
@@ -241,7 +249,7 @@ class HomeTab extends ConsumerWidget {
                         handle: user.handle,
                         time: post.time,
                         tweetText: post.content,
-                        isVerified: post.isVerified,
+                        isVerified: post.isVerified, tweetId: 'sdsd',
                       );
                     },
                   ),
@@ -254,6 +262,7 @@ class HomeTab extends ConsumerWidget {
     );
   }
 }
+
 
 
 

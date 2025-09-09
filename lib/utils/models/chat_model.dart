@@ -1,4 +1,6 @@
+// lib/utils/models/chat_model.dart
 class ChatModel {
+  final String id;
   final String profileImageUrl;
   final String username;
   final String lastMessage;
@@ -7,6 +9,7 @@ class ChatModel {
   final List<Message> messages;
 
   ChatModel({
+    required this.id,
     required this.profileImageUrl,
     required this.username,
     required this.lastMessage,
@@ -14,6 +17,22 @@ class ChatModel {
     this.isRead = false,
     required this.messages,
   });
+
+  ChatModel copyWith({
+    String? lastMessage,
+    String? time,
+    List<Message>? messages,
+  }) {
+    return ChatModel(
+      id: id,
+      profileImageUrl: profileImageUrl,
+      username: username,
+      lastMessage: lastMessage ?? this.lastMessage,
+      time: time ?? this.time,
+      isRead: isRead,
+      messages: messages ?? this.messages,
+    );
+  }
 }
 
 class Message {
@@ -30,6 +49,7 @@ class Message {
 
 final List<ChatModel> chats = [
   ChatModel(
+    id: '1',
     profileImageUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
     username: 'Elon Musk',
     lastMessage: 'See you soon!',
@@ -42,6 +62,7 @@ final List<ChatModel> chats = [
     ],
   ),
   ChatModel(
+    id: '2',
     profileImageUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
     username: 'Jane Doe',
     lastMessage: 'Let’s catch up later.',
@@ -50,17 +71,6 @@ final List<ChatModel> chats = [
     messages: [
       Message(text: 'Let’s catch up later.', time: '10m', isMe: false),
       Message(text: 'Sure!', time: '10m', isMe: true),
-    ],
-  ),
-  ChatModel(
-    profileImageUrl: 'https://randomuser.me/api/portraits/men/85.jpg',
-    username: 'Benji Quan',
-    lastMessage: 'a hear you no dey accra again',
-    time: '10m',
-    isRead: true,
-    messages: [
-      Message(text: 'Heya wosop man?', time: '11m', isMe: false),
-      Message(text: 'a hear you no dey accra again', time: '11m', isMe: false),
     ],
   ),
 ];

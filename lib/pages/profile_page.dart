@@ -1,8 +1,29 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_app/utils/models/post_model.dart';
 import 'package:twitter_app/widgets/post_widget.dart';
 
+// ------------------ FOLLOW STATE PROVIDER ------------------
+class FollowNotifier extends StateNotifier<Set<String>> {
+  FollowNotifier() : super({}); // store usernames you follow
+
+  void toggleFollow(String username) {
+    if (state.contains(username)) {
+      state = {...state}..remove(username); // unfollow
+    } else {
+      state = {...state, username}; // follow
+    }
+  }
+
+  bool isFollowing(String username) => state.contains(username);
+}
+
+final followProvider = StateNotifierProvider<FollowNotifier, Set<String>>(
+  (ref) => FollowNotifier(),
+);
+
+// ------------------ PROFILE MODEL ------------------
 class ProfileModel {
   final String profileImageUrl;
   final String username;
@@ -13,7 +34,7 @@ class ProfileModel {
   final int posts;
   final String location;
   final String website;
-  final String joinedDate = "January 2020"; // Example static date
+  final String joinedDate;
 
   ProfileModel({
     required this.profileImageUrl,
@@ -25,9 +46,11 @@ class ProfileModel {
     required this.posts,
     required this.location,
     required this.website,
+    this.joinedDate = "January 2020",
   });
 }
 
+// Example profile provider
 final profileProvider = Provider<ProfileModel>(
   (ref) => ProfileModel(
     profileImageUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
@@ -42,18 +65,22 @@ final profileProvider = Provider<ProfileModel>(
   ),
 );
 
-// A provider for one user profile
+// Example: current logged-in user provider
 final userProvider = Provider<UserModel>(
   (ref) => users[0],
-); // Example: first user
+);
 
+// ------------------ PROFILE UI ------------------
 class TwitterProfileUI extends ConsumerWidget {
   final String username;
   const TwitterProfileUI({super.key, required this.username});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = users.firstWhere((u) => u.username == username);
     final loggedInUser = ref.watch(userProvider);
+    final followState = ref.watch(followProvider);
+    final isFollowing = ref.read(followProvider.notifier).isFollowing(user.username);
 
     final isOwnProfile = user.username == loggedInUser.username;
 
@@ -62,20 +89,17 @@ class TwitterProfileUI extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Banner + Avatar using Stack
+            // ----------------- HEADER (Banner + Avatar) -----------------
             Stack(
               clipBehavior: Clip.none,
               children: [
-                // Banner
                 Image.network(
-                   user.coverImageUrl ??
-                  "https://cdn.pixabay.com/photo/2025/08/21/13/58/grassland-9787999_1280.jpg",
+                  user.coverImageUrl ??
+                      "https://cdn.pixabay.com/photo/2025/08/21/13/58/grassland-9787999_1280.jpg",
                   width: double.infinity,
                   height: 180,
                   fit: BoxFit.cover,
                 ),
-
-                // Top Icons
                 Positioned(
                   top: 40,
                   left: 16,
@@ -84,24 +108,6 @@ class TwitterProfileUI extends ConsumerWidget {
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
-                Positioned(
-                  top: 40,
-                  right: 70,
-                  child: IconButton(
-                    icon: const Icon(Icons.search, color: Colors.white),
-                    onPressed: () {},
-                  ),
-                ),
-                Positioned(
-                  top: 40,
-                  right: 16,
-                  child: IconButton(
-                    icon: const Icon(Icons.more_vert, color: Colors.white),
-                    onPressed: () {},
-                  ),
-                ),
-
-                // Avatar
                 Positioned(
                   bottom: -40,
                   left: 16,
@@ -116,57 +122,49 @@ class TwitterProfileUI extends ConsumerWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 50),
 
-            // Name + handle + follow button
+            // ----------------- NAME + HANDLE + FOLLOW/EDIT -----------------
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        user.username,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      Text(
-                        user.handle,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                        ),
-                      ),
+                      Text(user.username,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20)),
+                      Text(user.handle,
+                          style: const TextStyle(color: Colors.grey, fontSize: 16)),
                     ],
                   ),
                   const Spacer(),
                   OutlinedButton(
                     onPressed: () {
                       if (isOwnProfile) {
-                        // Navigate to Edit Profile Page
+                        // Navigate to Edit Profile
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Edit Profile clicked")),
                         );
                       } else {
-                        // Follow action
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Follow clicked")),
-                        );
+                        ref.read(followProvider.notifier).toggleFollow(user.username);
                       }
                     },
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      side: const BorderSide(color: Colors.grey),
+                      foregroundColor: isFollowing ? Colors.black : Colors.blue,
+                      side: BorderSide(
+                        color: isFollowing ? Colors.grey : Colors.blue,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: Text(isOwnProfile ? "Edit Profile" : "Follow"),
+                    child: Text(
+                      isOwnProfile
+                          ? "Edit Profile"
+                          : (isFollowing ? "Following" : "Follow"),
+                    ),
                   ),
                 ],
               ),
@@ -174,7 +172,7 @@ class TwitterProfileUI extends ConsumerWidget {
 
             const SizedBox(height: 12),
 
-            // Bio
+            // ----------------- BIO -----------------
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(user.bio),
@@ -182,34 +180,26 @@ class TwitterProfileUI extends ConsumerWidget {
 
             const SizedBox(height: 12),
 
-            // Location + Link + Joined
+            // ----------------- LOCATION + WEBSITE + JOINED -----------------
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
                   if (user.location != null) ...[
-                    const Icon(
-                      Icons.location_on_outlined,
-                      size: 16,
-                      color: Colors.grey,
-                    ),
+                    const Icon(Icons.location_on_outlined,
+                        size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
-                    Text(
-                      user.location!,
-                      style: const TextStyle(color: Colors.grey),
-                    ),
+                    Text(user.location!,
+                        style: const TextStyle(color: Colors.grey)),
                   ],
                   const SizedBox(width: 16),
                   if (user.website != null) ...[
                     const Icon(Icons.link, size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
-                    Text(
-                      user.website!,
-                      style: const TextStyle(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
+                    Text(user.website!,
+                        style: const TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline)),
                   ],
                 ],
               ),
@@ -218,44 +208,31 @@ class TwitterProfileUI extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.calendar_today,
-                    size: 16,
-                    color: Colors.grey,
-                  ),
+                  const Icon(Icons.calendar_today,
+                      size: 16, color: Colors.grey),
                   const SizedBox(width: 4),
-                  Text(
-                    "Joined ${user.joinDate}",
-                    style: const TextStyle(color: Colors.grey),
-                  ),
+                  Text("Joined ${user.joinDate}",
+                      style: const TextStyle(color: Colors.grey)),
                 ],
               ),
             ),
 
             const SizedBox(height: 12),
 
-            // Followers & Following
+            // ----------------- FOLLOWERS -----------------
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  Text(
-                    "${user.following}",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
+                  Text("${user.following}",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(width: 4),
                   const Text("Following", style: TextStyle(color: Colors.grey)),
                   const SizedBox(width: 16),
-                  Text(
-                    _formatFollowers(user.followers),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
+                  Text(_formatFollowers(user.followers),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(width: 4),
                   const Text("Followers", style: TextStyle(color: Colors.grey)),
                 ],
@@ -264,7 +241,7 @@ class TwitterProfileUI extends ConsumerWidget {
 
             const Divider(height: 30),
 
-            // Tabs
+            // ----------------- TABS (Posts, Replies, Media) -----------------
             DefaultTabController(
               length: 3,
               child: Column(
@@ -281,28 +258,23 @@ class TwitterProfileUI extends ConsumerWidget {
                   ),
                   SizedBox(
                     height: 300,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: TabBarView(
-                        children: [
-                          Column(
-                            children: user.posts
-                                .map(
-                                  (post) => TwitterPostWidget(
+                    child: TabBarView(
+                      children: [
+                        Column(
+                          children: user.posts
+                              .map((post) => TwitterPostWidget(
                                     profileImageUrl: user.profileImageUrl,
                                     username: user.username,
                                     handle: user.handle,
                                     time: post.time,
                                     tweetText: post.content,
-                                    isVerified: post.isVerified,
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                           const Center(child: Text("No replies yet")),
-                          const Center(child: Text("No media yet")),
-                        ],
-                      ),
+                                    isVerified: post.isVerified, tweetId: 'hgghg',
+                                  ))
+                              .toList(),
+                        ),
+                        const Center(child: Text("No replies yet")),
+                        const Center(child: Text("No media yet")),
+                      ],
                     ),
                   ),
                 ],
@@ -312,9 +284,9 @@ class TwitterProfileUI extends ConsumerWidget {
         ),
       ),
     );
-    
   }
-  // Helper to format followers like "278K"
+
+  // Format numbers like "278K"
   static String _formatFollowers(int value) {
     if (value >= 1000000) {
       return "${(value / 1000000).toStringAsFixed(1)}M";
@@ -325,7 +297,6 @@ class TwitterProfileUI extends ConsumerWidget {
     }
   }
 }
-  
 
 
 

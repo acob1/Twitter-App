@@ -269,8 +269,8 @@ final List<UserModel> users = [
   UserModel(
     id: '11',
     profileImageUrl: 'https://randomuser.me/api/portraits/men/88.jpg',
-    username: 'Michael Johnson',
-    handle: 'mikejohnson',
+    username: 'Michael ',
+    handle: 'mike',
     bio: 'Photographer 📸 | Capturing the world',
     followers: 4500,
     following: 500,
