@@ -5,9 +5,7 @@ import 'package:twitter_app/pages/profile_page.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:twitter_app/widgets/comment_bottom_sheet.dart';
 import 'package:twitter_app/widgets/repost_options_sheet.dart';
-// Import your new PostDetailPage
-
-
+import 'package:twitter_app/widgets/twitterLikeBu.dart';
 
 class TwitterPostWidget extends ConsumerWidget {
   final String profileImageUrl;
@@ -16,7 +14,7 @@ class TwitterPostWidget extends ConsumerWidget {
   final String time;
   final String tweetText;
   final bool isVerified;
-  final String tweetId; // Add unique ID for each tweet
+  final String tweetId;
 
   TwitterPostWidget({
     super.key,
@@ -180,10 +178,10 @@ class TwitterPostWidget extends ConsumerWidget {
                               color: isReposted ? Colors.green : Colors.grey.shade600,
                               onTap: () => _handleRepost(context, ref),
                             ),
-                            _buildEngagementButton(
-                              icon: isLiked ? Icons.favorite : Icons.favorite_border,
+                            // Special like button with animation
+                            TwitterLikeButton(
+                              isLiked: isLiked,
                               count: _formatCount(likeCount),
-                              color: isLiked ? Colors.red : Colors.grey,
                               onTap: () => _handleLike(ref),
                             ),
                             _buildEngagementButton(
@@ -448,3 +446,4 @@ class TwitterPostWidget extends ConsumerWidget {
     );
   }
 }
+
